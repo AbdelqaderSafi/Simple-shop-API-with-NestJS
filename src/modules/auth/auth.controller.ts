@@ -7,10 +7,11 @@ import type { LoginDTO, RegisterDTO, UserResponseDTO } from './dto/auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
+  @Post('/register')
   create(@Body() registerDTO: RegisterDTO): Promise<UserResponseDTO> {
     return this.authService.register(registerDTO);
   }
+
   @Post('login')
   login(@Body() loginDTO: LoginDTO): Promise<UserResponseDTO> {
     return this.authService.login(loginDTO);

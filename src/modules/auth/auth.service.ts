@@ -2,16 +2,17 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDTO, RegisterDTO, UserResponseDTO } from './dto/auth.dto';
 import * as argon from 'argon2';
 import { UserService } from '../user/user.service';
-import { removeFields } from '../utils/object.util';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from 'generated/prisma';
-import { error } from 'console';
+import { ConfigService } from '@nestjs/config';
+import { EnvVariables } from 'src/types/declartion-mergin';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private configService: ConfigService<EnvVariables>,
   ) {}
 
   async register(registerDTO: RegisterDTO): Promise<UserResponseDTO> {
