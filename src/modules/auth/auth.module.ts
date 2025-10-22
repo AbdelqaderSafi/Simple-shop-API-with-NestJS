@@ -12,8 +12,8 @@ import { EnvVariables } from 'src/types/declartion-mergin';
   imports: [
     UserModule,
     JwtModule.registerAsync({
+      global: true,
       useFactory: (configService: ConfigService<EnvVariables>) => ({
-        global: true,
         secret: configService.getOrThrow('JWT_SECRET'),
       }),
       inject: [ConfigService],

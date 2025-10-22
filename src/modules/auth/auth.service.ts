@@ -30,7 +30,8 @@ export class AuthService {
 
     // return user data + token
     return {
-      userData: this.userService.mapUserWithoutPassword(createdUser),
+      userData:
+        this.userService.mapUserWithoutPasswordAndCastBigint(createdUser),
       token,
     };
   }
@@ -52,14 +53,17 @@ export class AuthService {
     const token = this.generateJwtToken(foundUser.id, foundUser.role);
     // return user data and token
     return {
-      userData: this.userService.mapUserWithoutPassword(foundUser),
+      userData: this.userService.mapUserWithoutPasswordAndCastBigint(foundUser),
       token,
     };
   }
 
   validate(userPayload: UserResponseDTO['userData']) {
     // generate jwt token
-    const token = this.generateJwtToken(userPayload.id, userPayload.role);
+    const token = this.generateJwtToken(
+      BigInt(userPayload.id),
+      userPayload.role,
+    );
     // return user data and token
     return {
       userData: userPayload,
@@ -76,7 +80,10 @@ export class AuthService {
     return argon.verify(hashedPassword, password);
   }
 
-  private generateJwtToken(userId: bigint, role: UserRole) {
-    return this.jwtService.sign({ sub: userId, role }, { expiresIn: '30d' });
+  private generateJwtToken(userId: bigint | number, role: UserRole) {
+    return this.jwtService.sign(
+      { sub: String(userId), role },
+      { expiresIn: '30d' },
+    );
   }
 }
